@@ -8,6 +8,11 @@ Prerequisities: [Golang](https://golang.org/)
 
 Example: `go run src/2021/week24/week24.go`
 <br /><br />
+#### Python code challenges (.py)
+Prerequisities: [Python](https://www.python.org/)
+
+Example: `python3 src/2021/week46/week46.py`
+<br /><br />
 #### Javascript code challenges (.js)
 Prerequisities: [Node](https://nodejs.org/en/)
 
