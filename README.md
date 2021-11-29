@@ -13,6 +13,11 @@ Prerequisities: [Python](https://www.python.org/)
 
 Example: `python3 src/2021/week46/week46.py`
 <br /><br />
+#### Ruby code challenges (.rb)
+Prerequisities: [Ruby](https://www.ruby-lang.org/en/)
+
+Example: `ruby src/2021/week48/week48.rb`
+<br /><br />
 #### Javascript code challenges (.js)
 Prerequisities: [Node](https://nodejs.org/en/)
 
