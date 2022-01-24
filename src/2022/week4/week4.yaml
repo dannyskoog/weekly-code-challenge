@@ -1,0 +1,57 @@
+#/**
+# * Code challenge week 4, 2022 (language/tool: GitHub Actions, playground: None. Test it out in your own GitHub repository)
+# *
+# * Description:
+# *     The workflow below is supposed to perform a release of the branch code upon posting either a regular or review PR comment.
+# *     It uses a combination of the PR number and short commit SHA to construct a unique version for the docker image that it creates,
+# *     pushes and deploys (example: 'PR-27-d734cce'). But when testing it out we start to suspect that regular PR comments
+# *     ('issue_comment' events) triggers a release of the wrong (= not PR branch) code. And to add to our confusion we realize that
+# *     the two types of PR comments results in different docker image versions (specifically the SHA part) when checking the 'Actions'
+# *     logs of our repository.
+# *
+# * Questions:
+# *     1. Why do the two PR comment types result in different docker image versions?
+# *     2. How can the workflow be adjusted so that the correct (= PR branch) code is released for both comment types?
+# */
+
+name: PR release
+on:
+  pull_request_review:
+    types: [submitted, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  create_image_and_release:
+    name: Create image and release
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.review.body, 'deploy pr please') ||
+      (contains(github.event.comment.body, 'deploy pr please') && github.event.issue.pull_request)
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Get short SHA
+      id: get-short-sha
+      shell: bash
+      run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+
+    - name: Get PR number
+      id: get-pr-number
+      shell: bash
+      run: echo "::set-output name=number::${{ github.event.pull_request.number || github.event.issue.number }}"
+
+    - name: Create docker image version
+      id: create-docker-image-version
+      shell: bash
+      run: echo "::set-output name=version::PR-${{ steps.get-pr-number.outputs.number }}-${{ steps.get-short-sha.outputs.sha }}"
+
+    - name: Create and push docker image
+      shell: bash
+      run: echo "Created and pushed docker image with version ${{ steps.create-docker-image-version.outputs.version }}"
+
+    - name: Deploy docker image
+      id: get_sha
+      shell: bash
+      run: echo "Deployed docker image with version ${{ steps.create-docker-image-version.outputs.version }}"
