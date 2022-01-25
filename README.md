@@ -32,3 +32,8 @@ Example: `npx ts-node src/2021/week42/week42.ts`
 Prerequisities: [PostreSQL](https://www.postgresql.org/)
 
 Example: Connect to your local PostgreSQL instance and execute the file contents
+<br /><br />
+#### GitHub Actions code challenges (.yaml)
+Prerequisities: [GitHub](https://github.com/) account
+
+Example: Add the workflow file to one of your own repositories and trigger it accordingly
