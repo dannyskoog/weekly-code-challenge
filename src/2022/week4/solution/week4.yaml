@@ -1,0 +1,46 @@
+name: PR release
+on:
+  pull_request_review:
+    types: [submitted, edited]
+  issue_comment:
+    types: [created, edited]
+
+jobs:
+  create_image_and_release:
+    name: Create image and release
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.review.body, 'deploy pr please') ||
+      (contains(github.event.comment.body, 'deploy pr please') && github.event.issue.pull_request)
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Checkout pull request
+      run: hub pr checkout ${{ github.event.pull_request.number || github.event.issue.number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Get short SHA
+      id: get-short-sha
+      shell: bash
+      run: echo "::set-output name=sha::$(git rev-parse --short HEAD)"
+
+    - name: Get PR number
+      id: get-pr-number
+      shell: bash
+      run: echo "::set-output name=number::${{ github.event.pull_request.number || github.event.issue.number }}"
+
+    - name: Create docker image version
+      id: create-docker-image-version
+      shell: bash
+      run: echo "::set-output name=version::PR-${{ steps.get-pr-number.outputs.number }}-${{ steps.get-short-sha.outputs.sha }}"
+
+    - name: Create and push docker image
+      shell: bash
+      run: echo "Created and pushed docker image with version ${{ steps.create-docker-image-version.outputs.version }}"
+
+    - name: Deploy docker image
+      id: get_sha
+      shell: bash
+      run: echo "Deployed docker image with version ${{ steps.create-docker-image-version.outputs.version }}"
