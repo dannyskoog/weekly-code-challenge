@@ -1,4 +1,5 @@
 # Weekly Code Challenge
+[![Not Maintained](https://img.shields.io/badge/Maintenance%20Level-Not%20Maintained-yellow.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 
 A collection of fun code challenges of various programming languages. Each Monday a new one is added and each Thursday the solution is provided.
 
